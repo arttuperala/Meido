@@ -1,0 +1,22 @@
+{%extends "management/base.html"%}
+
+{% if project %}
+        {% set form_url = url_for('.project_edit', stub=project.stub) %}
+        {% set page_title = 'Edit project' %}
+    {% else %}
+        {% set form_url = url_for('.project_add') %}
+        {% set page_title = 'Add new project' %}
+    {% endif %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+    <h1 class="mb-3">
+        {{ page_title }}
+        {% if project %}
+            <small>{{ project.name }}</small>
+        {% endif %}
+    </h1>
+    
+    {{ bootstrap_form(form, ['name', 'stub', 'color', 'description'], form_url) }}
+{% endblock %}

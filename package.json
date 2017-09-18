@@ -1,0 +1,22 @@
+{
+  "name": "Meido",
+  "version": "1.0.0",
+  "description": "Build distribution web application",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.7.0",
+    "gulp-sass": "^3.1.0",
+    "bootstrap": "4.0.0-beta"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arttuperala/Meido.git"
+  },
+  "author": "Arttu Perälä <arttu@perala.me>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/arttuperala/Meido/issues"
+  },
+  "homepage": "https://github.com/arttuperala/Meido#readme"
+}

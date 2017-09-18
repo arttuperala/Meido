@@ -1,0 +1,21 @@
+{%extends "management/base.html"%}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="my-2">
+        <a href="{{ url_for('.project_add') }}" class="btn btn-primary btn-sm">Add project</a>
+    </div>
+    {% for project in projects %}
+            <div class="card" style="background-color: #{{ project.color }}; color: #fff;">
+                <div class="card-body">
+                    <a href="{{ url_for('.project', stub=project.stub) }}" class="block-link"><span></span></a>
+                    <h4 class="card-title">
+                        {{ project.name }}
+                    </h4>
+                </div>
+            </div>
+    {% else %}
+        <em>you have absolutely no projects</em>
+    {% endfor %}
+{% endblock %}

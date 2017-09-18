@@ -1,0 +1,54 @@
+{%extends "main/base.html"%}
+
+{% set project_color = '#' + project.color %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block content %}
+    <div class="container-fluid project-navigation">
+        <a href="{{ url_for('.index') }}" style="color: {{ project_color }};">Index</a>
+    </div>
+    <div class="container mt-4">
+        <h1 class="display-4" style="color: {{ project_color }};">
+            <a href="{{ url_for('.project_index', stub=project.stub) }}">{{ project.name }}</a>
+        </h1>
+        <p class="project-description" style="border-color: {{ project_color }}">{{ project.description }}</p>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for build in builds %}
+                <div class="col-xl-6">
+                    <div class="card build-card {% if loop.first %}latest{% else %}{% endif %}">
+                        <a href="{{ url_for('.project_download', stub=project.stub, build_number=build.number) }}" target="_blank" class="block-link"><span></span></a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                #{{ build.number }}
+                            </h4>
+                            <p class="card-text commit-message">
+                                {% if build.commit_message %}
+                                    {{ build.commit_message }}
+                                {% else %}
+                                    <em>null</em>
+                                {% endif %}
+                            </p>
+                            <p class="card-text commit">
+                                {% if build.commit %}
+                                    {{ build.commit }}
+                                {% else %}
+                                    <em>null</em>
+                                {% endif %}
+                            </p>
+                            <p class="card-text build-date">
+                                Added
+                                <time datetime="{{ build.date.isoformat() }}Z">
+                                    {{ build.date|deltatime }}
+                                </time>
+                                ago.
+                                </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{%extends "management/base.html"%}
+
+{% block title %}Project {{ project.name }}{% endblock %}
+
+{% block content %}
+    <div class="my-2">
+        <a href="{{ url_for('.project_edit', stub=project.stub) }}" class="btn btn-primary btn-sm">Edit project</a>
+        {% with subscribed = current_user in project.subscribed_users %}
+        <a href="{{ url_for('.project_subscribe', stub=project.stub) }}" class="btn {% if subscribed %}btn-danger{% else %}btn-success{% endif %} btn-sm">
+            {% if subscribed %}
+                Unsubcribe
+            {% else %}
+                Subscribe
+            {% endif %}
+        </a>
+        {% endwith %}
+    </div>
+    <h1>{{ project.name }}</h1>
+    <p>{{ project.description }}</p>
+    <div>
+        {% with url = url_for('main.project_index', stub=project.stub, _external=True) %}
+            <a href="{{ url }}" target="_blank">{{ url }}</a>
+        {% endwith %}
+    </div>
+    <div class="card mt-4">
+        <h3 class="card-header">API Key</h3>
+        <div class="card-body">
+            <h4 id="api-key-block" class="card-title collapse">
+                {{ project.api_key }}
+            </h4>
+            <p class="card-text">
+                Use this key to upload builds. If your key is compromised, you can regenerate the key.
+            </p>
+            <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#api-key-block" aria-expanded="false" aria-controls="api-key-block">
+                Toggle visibility
+            </button>
+            <a href="{{ url_for('.project_generate_api_key', stub=project.stub) }}" class="btn btn-primary float-right">
+                Regenerate
+            </a>
+        </div>
+    </div>
+{% endblock %}

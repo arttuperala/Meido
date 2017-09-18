@@ -1,0 +1,31 @@
+{%extends "main/base.html"%}
+
+{% block title %}Meido{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center display-4 my-3">Projects</h1>
+        {% for project in projects %}
+            <div class="project-card card card-inverse mb-3" style="background-color: #{{ project.color }}; color: #fff;">
+                <div class="card-body">
+                    <a href="{{ url_for('.project_index', stub=project.stub) }}" class="block-link"><span></span></a>
+                    <h2 class="card-title">{{ project.name }}</h2>
+                    {% if project.description %}
+                        <p class="card-text">{{ project.description }}</p>
+                    {% endif %}
+                    <p class="card-text">
+                        <small>
+                            {% if project.last_updated %}
+                                Last updated {{ project.last_updated|deltatime }} ago.
+                            {% else %}
+                                Never updated.
+                            {% endif %}
+                        </small>
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center"><em>there are no projects</em></p>
+        {% endfor %}
+    </div>
+{% endblock %}

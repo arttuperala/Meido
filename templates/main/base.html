@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/meido.css') }}">
+</head>
+<body>
+    {% block content %}{% endblock %}
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">
+                Powered by
+                <a href="https://github.com/arttuperala/Meido" target="_blank" {% if project_color %}style="color: {{ project_color }}"{% endif %}>Meido</a>.
+            </span>
+        </div>
+    </footer>
+</body>
+</html>
