@@ -45,4 +45,5 @@ def create_app(object_name: str) -> Flask:
     for jinja_filter in filters.__all__:
         app.jinja_env.filters[jinja_filter.__name__] = jinja_filter
 
+    sentry.captureMessage('Application initialized')
     return app
