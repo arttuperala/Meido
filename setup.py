@@ -15,6 +15,7 @@ requirements = [
     'Flask==0.12.2',
     'humanize==0.5.1',
     'itsdangerous==0.24',
+    'Pillow==4.2.1',
     'psycopg2==2.7.2',
     'raven==6.1.0',
     'SQLAlchemy==1.1.11',

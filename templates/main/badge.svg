@@ -1,0 +1,25 @@
+{% set title_width = title|text_width %}
+{% set value_width = value|text_width %}
+{% set full_width = title_width + value_width + 20 %}
+{% set title_offset = title_width / 2 - 1 + 6 %}
+{% set value_offset = title_width + value_width / 2 + 14 %}
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{{ full_width }}" height="20">
+    <linearGradient id="b" x2="0" y2="100%">
+        <stop offset="0" stop-color="#bbb" stop-opacity=".1" />
+        <stop offset="1" stop-opacity=".1" />
+    </linearGradient>
+    <clipPath id="a">
+        <rect width="{{ full_width }}" height="20" rx="3" fill="#fff" />
+    </clipPath>
+    <g clip-path="url(#a)">
+        <path fill="#555" d="M0 0h{{ title_width + 10 }}v20H0z" />
+        <path fill="#4c1" d="M{{ title_width + 10 }} 0h{{ full_width }}v20H{{ title_width + 10 }}z" />
+        <path fill="url(#b)" d="M0 0h{{ full_width }}v20H0z" />
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+        <text x="{{ title_offset }}" y="15" fill="#010101" fill-opacity=".3">{{ title }}</text>
+        <text x="{{ title_offset }}" y="14">{{ title }}</text>
+        <text x="{{ value_offset }}" y="15" fill="#010101" fill-opacity=".3">{{ value }}</text>
+        <text x="{{ value_offset }}" y="14">{{ value }}</text>
+    </g>
+</svg>

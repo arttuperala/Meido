@@ -1,4 +1,4 @@
-from flask import current_app, render_template, send_from_directory
+from flask import current_app, make_response, render_template, send_from_directory
 
 from meido.database import db
 from meido.main import main
@@ -11,6 +11,22 @@ def index():
     """Main page for Meido. Serves a list of all projects."""
     projects = Project.query.all()
     return render_template('main/index.html', projects=projects)
+
+
+@main.route('/<stub>/badge.svg')
+def project_badge(stub):
+    """Returns an SVG response containing the latest build info."""
+    project = Project.query.filter_by(stub=stub).first_or_404()
+    latest_build = Build.query.filter_by(project=project)\
+                              .order_by(Build.number.desc())\
+                              .first()
+    context = {
+        'title': 'latest build',
+        'value': '#{}'.format(latest_build.number) if latest_build else 'no builds',
+    }
+    response = make_response(render_template('main/badge.svg', **context))
+    response.headers['Content-type'] = 'image/svg+xml; charset=utf-8'
+    return response
 
 
 @main.route('/<stub>/download/<build_number>')

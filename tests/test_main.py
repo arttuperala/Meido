@@ -73,3 +73,17 @@ class MeidoMainTest(MeidoTestCase):
             self.assertContains(response, self.project.name)
             self.assertContains(response, self.project.description)
             self.assertContains(response, self.project.color)
+
+    def test_project_badge(self):
+        with self.context():
+            self.factory(BuildFactory, project=self.project, number=1, )
+            self.factory(BuildFactory, project=self.project, number=12, )
+            self.factory(BuildFactory, project=self.project, number=108, )
+            self.factory(BuildFactory, project=self.project, number=4951, )
+            self.project = Project.query.get(self.project.id)
+
+        response = self.client.get('/{}/badge.svg'.format(self.project.stub))
+        self.assert200(response)
+        with self.context():
+            self.assertContains(response, 'latest build')
+            self.assertContains(response, '#4951')
