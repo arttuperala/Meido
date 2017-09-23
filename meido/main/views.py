@@ -1,4 +1,6 @@
-from flask import current_app, make_response, render_template, send_from_directory
+from flask import (
+    current_app, make_response, render_template, request, send_from_directory
+)
 
 from meido.database import db
 from meido.main import main
@@ -24,8 +26,13 @@ def project_badge(stub):
         'title': 'latest build',
         'value': '#{}'.format(latest_build.number) if latest_build else 'no builds',
     }
+    try:
+        max_age = max(int(request.args.get('max-age', '3600')), 1800)
+    except (TypeError, ValueError):
+        max_age = 3600
     response = make_response(render_template('main/badge.svg', **context))
     response.headers['Content-type'] = 'image/svg+xml; charset=utf-8'
+    response.headers['Cache-Control'] = 'max-age={}'.format(max_age)
     return response
 
 

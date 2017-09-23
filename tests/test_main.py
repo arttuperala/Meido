@@ -87,3 +87,18 @@ class MeidoMainTest(MeidoTestCase):
         with self.context():
             self.assertContains(response, 'latest build')
             self.assertContains(response, '#4951')
+
+    def test_project_badge_invalid_max_age(self):
+        with self.context():
+            self.factory(BuildFactory, project=self.project, number=1, )
+            self.factory(BuildFactory, project=self.project, number=12, )
+            self.factory(BuildFactory, project=self.project, number=108, )
+            self.factory(BuildFactory, project=self.project, number=4951, )
+            self.project = Project.query.get(self.project.id)
+
+        response = self.client.get('/{}/badge.svg?max-age=old'.format(self.project.stub))
+        self.assert200(response)
+        with self.context():
+            self.assertEqual(response.headers.get('Cache-Control'), 'max-age=3600')
+            self.assertContains(response, 'latest build')
+            self.assertContains(response, '#4951')

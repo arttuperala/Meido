@@ -12,8 +12,8 @@ class LoginTest(MeidoTestCase):
     def test_login_load(self):
         response = self.client.get('/management/login')
         self.assert200(response)
-        self.assertContains(response, 'Username')
-        self.assertContains(response, 'Password')
+        self.assertContains(response, 'username')
+        self.assertContains(response, 'password')
 
     def test_login_post(self):
         with self.context():
