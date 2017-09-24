@@ -12,7 +12,14 @@
         <h1 class="display-4" style="color: {{ project_color }};">
             <a href="{{ url_for('.project_index', stub=project.stub) }}">{{ project.name }}</a>
         </h1>
-        <p class="project-description" style="border-color: {{ project_color }}">{{ project.description }}</p>
+        <p class="project-description" style="border-color: {{ project_color }}">
+            {{ project.description }}
+            {% if project.github_shorthand %}
+                <a href="https://github.com/{{ project.github_shorthand }}" target="_blank">
+                    <img class="octicon" src="{{ url_for('static', filename='svg/mark-github.svg') }}" alt="Github">
+                </a>
+            {% endif %}
+        </p>
     </div>
     <div class="container">
         <div class="row">

@@ -58,6 +58,8 @@ class Builds(Resource):
         build_file = self.args.get('file')
         destination = pathjoin(current_app.config['BUILD_DIRECTORY'],
                                build.generate_filename(build_file.filename))
+        if project.github_shorthand:
+            build.get_github_data()
         db.session.add(build)
         if commit_or_rollback():
             build_file.save(destination)

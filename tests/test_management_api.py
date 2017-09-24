@@ -18,12 +18,11 @@ class ProjectManagementAPIBuildTest(MeidoTestCase):
         with self.context():
             self.project = self.factory(ProjectFactory, name='Test Project', stub='test')
 
-    def request_data(self, build_number=1, commit_message='Initial commit',
+    def request_data(self, build_number=1,
                      commit='1c66a45bb77d90f50f258d6bad89ee196d98971b'):
         return {
             'build_number': build_number,
             'commit': commit,
-            'commit_message': commit_message,
             'file': (BytesIO(b'file content'), 'build.txt'),
         }
 
@@ -37,6 +36,40 @@ class ProjectManagementAPIBuildTest(MeidoTestCase):
                                     headers=self.request_headers())
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, '"success": true')
+
+    def test_api_build_upload_github_api(self):
+        with self.context():
+            project = Project.query.get(self.project.id)
+            project.github_shorthand = 'arttuperala/kmbmpdc'
+            db.session.commit()
+
+        data = self.request_data(build_number=101,
+                                 commit='3c17436f265ebe710e9c45956f18983e3699058d')
+        response = self.client.post('/management/api/build', data=data,
+                                    headers=self.request_headers())
+        self.assertEquals(response.status_code, 200)
+        self.assertContains(response, '"success": true')
+
+        with self.context():
+            build = Build.query.filter_by(project_id=self.project.id, number=101).one()
+            self.assertIn('Upgrade imeji submodule', build.commit_message)
+
+    def test_api_build_upload_github_api_no_commit(self):
+        with self.context():
+            project = Project.query.get(self.project.id)
+            project.github_shorthand = 'arttuperala/kmbmpdc'
+            db.session.commit()
+
+        data = self.request_data(build_number=101)
+        del data['commit']
+        response = self.client.post('/management/api/build', data=data,
+                                    headers=self.request_headers())
+        self.assertEquals(response.status_code, 200)
+        self.assertContains(response, '"success": true')
+
+        with self.context():
+            build = Build.query.filter_by(project_id=self.project.id, number=101).one()
+            self.assertIsNone(build.commit_message)
 
     @patch('meido.management.notifications.post')
     def test_api_build_upload_notification(self, mock_post):

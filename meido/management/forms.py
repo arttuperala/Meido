@@ -41,6 +41,11 @@ class ProjectForm(FlaskForm):
                         description='Hexadecimal color code for the project used for '
                                     'theming the pages. Optional.')
     description = TextAreaField('Description')
+    github_shorthand = StringField(
+        'Github shorthand',
+        description='Github owner and repo names separated by a slash. '
+                    'For example: arttuperala/Meido'
+    )
 
     def validate_color(self, field):
         """Validates that the color field is a valid hexadecimal value between 0 and 6

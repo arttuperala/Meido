@@ -1,3 +1,4 @@
+import requests
 from datetime import datetime
 from flask_login import UserMixin, AnonymousUserMixin
 from secrets import token_hex
@@ -41,6 +42,21 @@ class Build(db.Model):
         self.filename = filename
         return filename
 
+    def get_github_data(self):
+        """Downlaods commit message data from Github."""
+        if not self.commit:
+            return
+
+        response = requests.get(self.github_api_url)
+        if response.status_code == 200:
+            self.commit_message = response.json()['commit']['message']
+
+    @property
+    def github_api_url(self):
+        """Returns the Github API link to gather details about the commit."""
+        return ''.join(['https://api.github.com/repos/', self.project.github_shorthand,
+                        '/commits/', self.commit])
+
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,6 +65,7 @@ class Project(db.Model):
     color = db.Column(db.String(6))
     description = db.Column(db.Text)
     api_key = db.Column(db.String(64), unique=True)
+    github_shorthand = db.Column(db.String(255))
 
     builds = db.relationship('Build', backref='project', lazy='dynamic')
     subscribed_users = db.relationship('User', secondary=user_project_subscription,
