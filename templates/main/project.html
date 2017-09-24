@@ -26,7 +26,7 @@
                             </h4>
                             <p class="card-text commit-message">
                                 {% if build.commit_message %}
-                                    {{ build.commit_message }}
+                                    {{ build.commit_message.split('\n')[0] }}
                                 {% else %}
                                     <em>null</em>
                                 {% endif %}
